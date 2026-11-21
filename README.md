@@ -19,7 +19,8 @@ video plays forward, scroll up and it plays in reverse.
 ## Stack
 
 - Plain HTML / CSS / JS — no build step, no backend.
-- GSAP 3 + ScrollTrigger (CDN), Lenis smooth scroll (CDN).
+- GSAP 3 + ScrollTrigger and Lenis smooth scroll, self-hosted in `vendor/`
+  (no CDN dependency, so the scrub works even on a slow mobile network).
 - Fonts: Fraunces + Manrope (Google Fonts).
 
 ## Files

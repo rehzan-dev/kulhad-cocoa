@@ -26,9 +26,12 @@
   }
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ---------- Smooth scroll (Lenis), wired into GSAP's ticker ---------- */
+  /* ---------- Smooth scroll (Lenis), wired into GSAP's ticker ----------
+     Desktop only: touch scrolling is already smooth natively, and Lenis
+     adds nothing on a phone except another thing that can break scroll. */
+  var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   var lenis = null;
-  if (typeof Lenis !== 'undefined') {
+  if (typeof Lenis !== 'undefined' && !isTouch) {
     lenis = new Lenis({ duration: 1.15, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
@@ -68,6 +71,20 @@
   /* ---------- Scene counter ---------- */
   var sceneCurrent = document.getElementById('sceneCurrent');
 
+  /* One rAF loop does all video seeking, so a phone never gets more
+     than one seek per frame per video — and never a new seek while
+     the previous one is still landing. */
+  var scrubStates = [];
+  (function seekLoop() {
+    scrubStates.forEach(function (st) {
+      var v = st.video;
+      if (!st.active || !v || v.readyState < 1 || !v.duration || v.seeking) return;
+      var target = st.progress * v.duration;
+      if (Math.abs(v.currentTime - target) > 0.05) v.currentTime = target;
+    });
+    requestAnimationFrame(seekLoop);
+  })();
+
   /* ---------- Per-scene: lazy video + scroll scrub + text ---------- */
   document.querySelectorAll('.scene').forEach(function (scene) {
     var video = scene.querySelector('video');
@@ -81,6 +98,7 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting && !video.src) {
             video.src = video.dataset.src;
+            video.preload = 'auto';
             video.load();
             loader.disconnect();
           }
@@ -89,18 +107,20 @@
       loader.observe(scene);
     }
 
-    /* Scroll progress -> video time. Smoothed scrub (0.5s catch-up). */
+    /* Scroll progress -> video time. ScrollTrigger only records the
+       target progress (smoothed, 0.5s catch-up); the actual seeking
+       happens in the rAF loop above. Seeking on every scroll tick
+       overwhelms phone decoders and the video freezes. */
+    var scrubState = { video: video, progress: 0, active: false };
+    scrubStates.push(scrubState);
     ScrollTrigger.create({
       trigger: scene,
       start: 'top top',
       end: 'bottom bottom',
       scrub: 0.5,
-      onUpdate: function (self) {
-        if (!video || video.readyState < 1 || !video.duration) return;
-        var target = self.progress * video.duration;
-        if (Math.abs(video.currentTime - target) > 0.04) video.currentTime = target;
-      },
+      onUpdate: function (self) { scrubState.progress = self.progress; },
       onToggle: function (self) {
+        scrubState.active = self.isActive;
         if (self.isActive && sceneCurrent) sceneCurrent.textContent = scene.dataset.index;
       }
     });
