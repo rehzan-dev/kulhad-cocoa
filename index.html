@@ -1,1 +1,272 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kulhad & Cocoa</title></head><body><h1>Kulhad & Cocoa</h1><p>Deploying — full site coming next.</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kulhad &amp; Cocoa — Slow Chai. Dark Chocolate.</title>
+<meta name="description" content="Kulhad & Cocoa is an artisan chai and chocolate house in Karachi. Slow-brewed masala chai, bean-to-bar chocolate, street food — scroll to taste the story.">
+<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+<header class="site-header" id="siteHeader">
+  <a class="brand" href="#top" aria-label="Kulhad and Cocoa — back to top">
+    <span class="brand-mark"><img src="assets/logo-mark.png" alt="Kulhad &amp; Cocoa logo — a clay kulhad cup with a curl of steam"></span>
+    <span class="brand-name">Kulhad <em>&amp;</em> Cocoa</span>
+  </a>
+  <nav class="site-nav">
+    <a href="#story">Story</a>
+    <a href="#menu">Menu</a>
+    <a href="#visit" class="btn-small">Visit us</a>
+  </nav>
+</header>
+
+<div class="scene-counter" id="sceneCounter" aria-hidden="true"><span id="sceneCurrent">01</span><i>/</i><span>10</span></div>
+
+<main id="top">
+
+  <!-- 01 · HERO -->
+  <section class="scene scene-hero" data-index="01">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/hero-chai.jpg" data-src="videos/hero-chai.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy hero-copy">
+        <p class="kicker">Artisan chai &amp; chocolate house — Karachi</p>
+        <h1>Slow chai.<br><span>Dark chocolate.</span></h1>
+        <p class="lede">Poured by hand, ground fresh, served in kulhads. Scroll to taste the story.</p>
+      </div>
+      <div class="scroll-cue"><span></span>Scroll</div>
+      <div class="scene-num">01</div>
+    </div>
+  </section>
+
+  <!-- 02 · CHOCOLATE POUR -->
+  <section class="scene" data-index="02">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/chocolate-pour.jpg" data-src="videos/chocolate-pour.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Bean to bar</p>
+        <h2>Poured the<br>slow way.</h2>
+        <p class="lede">Single-origin cacao, melted low and poured into moulds by hand — one bar at a time.</p>
+      </div>
+      <div class="scene-num">02</div>
+    </div>
+  </section>
+
+  <!-- 03 · KOLKATA CHAI -->
+  <section class="scene" data-index="03">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/kolkata-chai.jpg" data-src="videos/kolkata-chai.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">The street craft</p>
+        <h2>Kolkata<br>knows chai.</h2>
+        <p class="lede">Copper kettles, clay cups, and a pour perfected over a hundred years of rush hour.</p>
+      </div>
+      <div class="scene-num">03</div>
+    </div>
+  </section>
+
+  <!-- 04 · CHOCOLATE SWIRL -->
+  <section class="scene" data-index="04">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/chocolate-swirl.jpg" data-src="videos/chocolate-swirl.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Silk, by the spoon</p>
+        <h2>Gloss you<br>can taste.</h2>
+        <p class="lede">Seventy percent dark, folded until it shines — the base of every dessert we serve.</p>
+      </div>
+      <div class="scene-num">04</div>
+    </div>
+  </section>
+
+  <!-- 05 · STREET TEA -->
+  <section class="scene" data-index="05">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/street-tea.jpg" data-src="videos/street-tea.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Cutting chai</p>
+        <h2>Half a cup.<br>Full steam.</h2>
+        <p class="lede">High pour, frothy top, drunk standing at the stall. The way it was always meant to be.</p>
+      </div>
+      <div class="scene-num">05</div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto" id="story">
+    <div class="manifesto-inner">
+      <img class="manifesto-mark" src="assets/logo-mark.png" alt="Kulhad &amp; Cocoa logo">
+      <p class="manifesto-line">No shortcuts.</p>
+      <p class="manifesto-line">The chai simmers low.</p>
+      <p class="manifesto-line">The chocolate folds slow.</p>
+      <p class="manifesto-line"><em>Everything here takes the time it takes.</em></p>
+      <p class="manifesto-small">Est. 2026 — Karachi</p>
+    </div>
+  </section>
+
+  <!-- 06 · MILK TEA -->
+  <section class="scene" data-index="06">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/milk-tea.jpg" data-src="videos/milk-tea.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Doodh chai</p>
+        <h2>Low flame.<br>No hurry.</h2>
+        <p class="lede">Milk and leaves simmered slow until the colour turns the exact shade of evening.</p>
+      </div>
+      <div class="scene-num">06</div>
+    </div>
+  </section>
+
+  <!-- 07 · CHOCOLATE MIX -->
+  <section class="scene" data-index="07">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/chocolate-mix.jpg" data-src="videos/chocolate-mix.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Folded, never rushed</p>
+        <h2>Thick. Dark.<br>Patient.</h2>
+        <p class="lede">Our brownie batter is mixed by hand — no machine has ever touched it, and none ever will.</p>
+      </div>
+      <div class="scene-num">07</div>
+    </div>
+  </section>
+
+  <!-- 08 · NOODLE STEW -->
+  <section class="scene" data-index="08">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/noodle-stew.jpg" data-src="videos/noodle-stew.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">From the kitchen</p>
+        <h2>Steam, spice,<br>slurp.</h2>
+        <p class="lede">A kimchi noodle bowl for the days when chai alone is not quite enough.</p>
+      </div>
+      <div class="scene-num">08</div>
+    </div>
+  </section>
+
+  <!-- 09 · ALOO PARATHA -->
+  <section class="scene" data-index="09">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/aloo-paratha.jpg" data-src="videos/aloo-paratha.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">Straight off the tawa</p>
+        <h2>Crisp outside.<br>Soft inside.</h2>
+        <p class="lede">Stuffed, rolled and roasted to order — with chutney made fresh every single morning.</p>
+      </div>
+      <div class="scene-num">09</div>
+    </div>
+  </section>
+
+  <!-- 10 · SPICES -->
+  <section class="scene" data-index="10">
+    <div class="scene-sticky">
+      <div class="scene-media">
+        <video muted playsinline preload="none" poster="posters/spices.jpg" data-src="videos/spices.mp4"></video>
+        <div class="scene-shade"></div>
+      </div>
+      <div class="scene-copy">
+        <p class="kicker">It all starts here</p>
+        <h2>Ground fresh.<br>Every day.</h2>
+        <p class="lede">Cardamom, cinnamon, chilli, ginger — the same spices in your chai and on your plate.</p>
+      </div>
+      <div class="scene-num">10</div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu" id="menu">
+    <div class="menu-head">
+      <p class="kicker">The menu</p>
+      <h2>The whole menu,<br><span>made to order.</span></h2>
+      <p class="menu-note">Everything is made when you ask for it. Nothing sits waiting under a lamp.</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-col">
+        <h3>Chai</h3>
+        <ul>
+          <li class="menu-item"><div><h4>Masala Kulhad Chai</h4><p>Slow-brewed, ginger &amp; cardamom</p></div><span>Rs 300</span></li>
+          <li class="menu-item"><div><h4>Kolkata Cutting Chai</h4><p>Half cup, full kick</p></div><span>Rs 180</span></li>
+          <li class="menu-item"><div><h4>Doodh Chai</h4><p>Milk, low flame, no hurry</p></div><span>Rs 250</span></li>
+          <li class="menu-item"><div><h4>Kashmiri Pink Chai</h4><p>Salt, pistachio, rose</p></div><span>Rs 450</span></li>
+          <li class="menu-item"><div><h4>Adrak Elaichi Chai</h4><p>Fresh ginger, green cardamom</p></div><span>Rs 280</span></li>
+          <li class="menu-item"><div><h4>Iced Masala Chai</h4><p>Shaken cold, same masala</p></div><span>Rs 400</span></li>
+        </ul>
+      </div>
+      <div class="menu-col">
+        <h3>Chocolate &amp; Kitchen</h3>
+        <ul>
+          <li class="menu-item"><div><h4>70% Dark Drinking Chocolate</h4><p>Thick, unsweetened-leaning, serious</p></div><span>Rs 650</span></li>
+          <li class="menu-item"><div><h4>Chocolate Fondant</h4><p>Molten centre, twelve minutes</p></div><span>Rs 750</span></li>
+          <li class="menu-item"><div><h4>Kulhad Brownie</h4><p>Served warm, in the cup it baked in</p></div><span>Rs 550</span></li>
+          <li class="menu-item"><div><h4>Spiced Hot Chocolate</h4><p>Chilli, cinnamon, dark cocoa</p></div><span>Rs 600</span></li>
+          <li class="menu-item"><div><h4>Kimchi Noodle Bowl</h4><p>Steam, spice, slurp</p></div><span>Rs 890</span></li>
+          <li class="menu-item"><div><h4>Aloo Paratha &amp; Chutney</h4><p>Straight off the tawa</p></div><span>Rs 450</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="visit">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark brand-mark-lg"><img src="assets/logo-mark.png" alt="Kulhad &amp; Cocoa logo"></span>
+        <p class="footer-name">Kulhad <em>&amp;</em> Cocoa</p>
+        <p class="footer-tag">Slow chai. Dark chocolate.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Find us</h4>
+        <p>DHA Phase 6, Karachi<br>Walk-ins only — no bookings</p>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <p>Open daily<br>8:00 AM – 11:00 PM</p>
+        <p class="open-status"><span class="open-dot" id="openDot"></span><span id="openText">Checking hours…</span></p>
+      </div>
+      <div class="footer-col">
+        <h4>Follow</h4>
+        <p>@kulhadandcocoa<br>New pours, first here.</p>
+      </div>
+    </div>
+    <p class="footer-fine">© 2026 Kulhad &amp; Cocoa — a concept site. All video: Pexels (free licence).</p>
+  </footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
