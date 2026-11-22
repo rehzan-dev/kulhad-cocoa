@@ -31,6 +31,8 @@ video plays forward, scroll up and it plays in reverse.
 - `assets/logo-mark.png` — brand mark (kulhad cup + steam curl)
 - `videos/` — 10 web-ready clips (H.264, 1080p, dense keyframes, faststart)
 - `posters/` — middle-frame posters for each clip
+- `frames/` — per-scene JPEG frame-sheets (10 fps, 60 frames per sheet) for the touch-device canvas scrub
+- `vendor/` — self-hosted GSAP, ScrollTrigger and Lenis (no CDN dependency)
 
 ## Videos
 

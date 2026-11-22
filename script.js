@@ -1,7 +1,10 @@
 /* Kulhad & Cocoa — scroll-scrubbed video site.
    Every scene is a tall section with a sticky full-viewport video.
-   Scroll progress drives video.currentTime frame by frame, so scrolling
-   down plays the video forward and scrolling up plays it in reverse.
+   Scroll progress drives the video frame by frame, so scrolling down
+   plays it forward and scrolling up plays it in reverse.
+   Desktop scrubs the <video> itself (currentTime). Phones can't seek
+   video smoothly, so touch devices scrub pre-rendered frame-sheets
+   drawn on a <canvas> instead — same motion, zero decoder stalls.
    Works without JS too: videos fall back to their poster stills. */
 
 (function () {
@@ -30,6 +33,7 @@
      Desktop only: touch scrolling is already smooth natively, and Lenis
      adds nothing on a phone except another thing that can break scroll. */
   var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (isTouch) document.documentElement.classList.add('touch-scrub');
   var lenis = null;
   if (typeof Lenis !== 'undefined' && !isTouch) {
     lenis = new Lenis({ duration: 1.15, smoothWheel: true });
@@ -71,29 +75,46 @@
   /* ---------- Scene counter ---------- */
   var sceneCurrent = document.getElementById('sceneCurrent');
 
-  /* One rAF loop does all video seeking, so a phone never gets more
-     than one seek per frame per video — and never a new seek while
-     the previous one is still landing. */
+  /* ---------- Canvas frame-sheets (touch devices) ----------
+     Phones can't seek video smoothly, so on touch devices each scene
+     scrubs pre-rendered frames instead: 10 fps JPEG sheets, 60 frames
+     per sheet (10 x 6 grid, 480x270 each). Drawing a frame is instant,
+     so scrubbing stays smooth with no decoder stalls. */
+  var FRAMES_PER_SHEET = 60;
+  var SHEET_COLS = 10;
+  var FRAME_W = 480;
+  var FRAME_H = 270;
+  var FRAME_COUNTS = {
+    'hero-chai': 102, 'chocolate-pour': 88, 'kolkata-chai': 119,
+    'chocolate-swirl': 101, 'street-tea': 91, 'milk-tea': 102,
+    'chocolate-mix': 105, 'noodle-stew': 101, 'aloo-paratha': 101,
+    'spices': 79
+  };
+
+  /* One rAF loop drives every scene's scrub, so work stays in step
+     with the display. Each scene registers an update(progress) — video
+     seeking on desktop, canvas frame drawing on touch. Every scene is
+     updated every frame: gating on ScrollTrigger's active state misses
+     scenes at page load (onToggle never fires for the initial state)
+     and scenes jumped past by a fast scroll, leaving them frozen. */
   var scrubStates = [];
-  (function seekLoop() {
-    scrubStates.forEach(function (st) {
-      var v = st.video;
-      if (!st.active || !v || v.readyState < 1 || !v.duration || v.seeking) return;
-      var target = st.progress * v.duration;
-      if (Math.abs(v.currentTime - target) > 0.05) v.currentTime = target;
-    });
-    requestAnimationFrame(seekLoop);
+  (function scrubLoop() {
+    scrubStates.forEach(function (st) { st.update(st.progress); });
+    requestAnimationFrame(scrubLoop);
   })();
 
-  /* ---------- Per-scene: lazy video + scroll scrub + text ---------- */
+  /* ---------- Per-scene: lazy media + scroll scrub + text ---------- */
   document.querySelectorAll('.scene').forEach(function (scene) {
     var video = scene.querySelector('video');
+    var canvas = scene.querySelector('canvas');
     var copy = scene.querySelector('.scene-copy');
     var shade = scene.querySelector('.scene-shade');
     var isHero = scene.classList.contains('scene-hero');
+    var clipName = video && video.dataset.src
+      ? video.dataset.src.split('/').pop().replace('.mp4', '') : '';
 
-    /* Lazy-load the video as the scene approaches (one viewport ahead). */
-    if (video && video.dataset.src) {
+    /* Desktop: lazy-load the video as the scene approaches. */
+    if (!isTouch && video && video.dataset.src) {
       var loader = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting && !video.src) {
@@ -107,11 +128,57 @@
       loader.observe(scene);
     }
 
-    /* Scroll progress -> video time. ScrollTrigger only records the
-       target progress (smoothed, 0.5s catch-up); the actual seeking
-       happens in the rAF loop above. Seeking on every scroll tick
-       overwhelms phone decoders and the video freezes. */
-    var scrubState = { video: video, progress: 0, active: false };
+    /* Touch: lazy-load this scene's frame-sheets instead. */
+    var sheets = [];
+    if (isTouch && canvas && clipName && FRAME_COUNTS[clipName]) {
+      var totalSheets = Math.ceil(FRAME_COUNTS[clipName] / FRAMES_PER_SHEET);
+      var sheetLoader = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          sheetLoader.disconnect();
+          for (var s = 0; s < totalSheets; s++) {
+            (function (idx) {
+              var img = new Image();
+              img.onload = function () { sheets[idx] = img; };
+              img.src = 'frames/' + clipName + '-' + (idx + 1) + '.jpg';
+            })(s);
+          }
+        });
+      }, { rootMargin: '100% 0px 100% 0px' });
+      sheetLoader.observe(scene);
+    }
+
+    /* The per-scene scrub update: video seek on desktop, frame draw
+       on touch. Before a sheet loads, the canvas stays transparent
+       and the video's poster shows through underneath. */
+    var ctx = canvas ? canvas.getContext('2d') : null;
+    var lastFrame = -1;
+    function updateScene(progress) {
+      if (isTouch) {
+        if (!ctx || !clipName || !FRAME_COUNTS[clipName]) return;
+        var total = FRAME_COUNTS[clipName];
+        var frame = Math.min(total - 1, Math.floor(progress * total));
+        if (frame === lastFrame) return;
+        var sheet = sheets[Math.floor(frame / FRAMES_PER_SHEET)];
+        if (!sheet) return;
+        var inSheet = frame % FRAMES_PER_SHEET;
+        ctx.drawImage(sheet,
+          (inSheet % SHEET_COLS) * FRAME_W,
+          Math.floor(inSheet / SHEET_COLS) * FRAME_H,
+          FRAME_W, FRAME_H, 0, 0, FRAME_W, FRAME_H);
+        lastFrame = frame;
+        return;
+      }
+      if (!video || video.readyState < 1 || !video.duration || video.seeking) return;
+      var target = progress * video.duration;
+      if (Math.abs(video.currentTime - target) > 0.05) video.currentTime = target;
+    }
+
+    /* Scroll progress -> scrub. ScrollTrigger only records the target
+       progress (smoothed, 0.5s catch-up); the rAF loop applies it.
+       onToggle only moves the scene counter — the scrub itself must
+       not depend on it (see the note on the rAF loop above). */
+    var scrubState = { progress: 0, update: updateScene };
     scrubStates.push(scrubState);
     ScrollTrigger.create({
       trigger: scene,
@@ -120,14 +187,14 @@
       scrub: 0.5,
       onUpdate: function (self) { scrubState.progress = self.progress; },
       onToggle: function (self) {
-        scrubState.active = self.isActive;
         if (self.isActive && sceneCurrent) sceneCurrent.textContent = scene.dataset.index;
       }
     });
 
-    /* Cinematic settle: video eases from a slight zoom to full frame. */
-    if (video) {
-      gsap.fromTo(video, { scale: 1.12 }, {
+    /* Cinematic settle: media eases from a slight zoom to full frame. */
+    var zoomTarget = isTouch ? canvas : video;
+    if (zoomTarget) {
+      gsap.fromTo(zoomTarget, { scale: 1.12 }, {
         scale: 1, ease: 'none',
         scrollTrigger: { trigger: scene, start: 'top top', end: 'bottom bottom', scrub: true }
       });
